@@ -21,12 +21,16 @@ static void ExternalLobVar_Free(udt_ExternalLobVar*);
 static PyObject *ExternalLobVar_Str(udt_ExternalLobVar*);
 static PyObject *ExternalLobVar_GetAttr(udt_ExternalLobVar*, PyObject*);
 static PyObject *ExternalLobVar_Size(udt_ExternalLobVar*, PyObject*);
+static PyObject *ExternalLobVar_Open(udt_ExternalLobVar*, PyObject*);
+static PyObject *ExternalLobVar_Close(udt_ExternalLobVar*, PyObject*);
 static PyObject *ExternalLobVar_Read(udt_ExternalLobVar*, PyObject*,
         PyObject*);
 static PyObject *ExternalLobVar_Write(udt_ExternalLobVar*, PyObject*,
         PyObject*);
 static PyObject *ExternalLobVar_Trim(udt_ExternalLobVar*, PyObject*,
         PyObject*);
+static PyObject *ExternalLobVar_GetChunkSize(udt_ExternalLobVar*, PyObject*);
+static PyObject *ExternalLobVar_IsOpen(udt_ExternalLobVar*, PyObject*);
 static PyObject *ExternalLobVar_GetFileName(udt_ExternalLobVar*, PyObject*);
 static PyObject *ExternalLobVar_SetFileName(udt_ExternalLobVar*, PyObject*);
 static PyObject *ExternalLobVar_FileExists(udt_ExternalLobVar*, PyObject*);
@@ -68,12 +72,16 @@ static PyTypeObject g_ExternalLobVarType = {
 //-----------------------------------------------------------------------------
 static PyMethodDef g_ExternalLobVarMethods[] = {
     { "size", (PyCFunction) ExternalLobVar_Size, METH_NOARGS },
+    { "open", (PyCFunction) ExternalLobVar_Open, METH_NOARGS },
+    { "close", (PyCFunction) ExternalLobVar_Close, METH_NOARGS },
     { "read", (PyCFunction) ExternalLobVar_Read,
               METH_VARARGS  | METH_KEYWORDS },
     { "write", (PyCFunction) ExternalLobVar_Write,
               METH_VARARGS  | METH_KEYWORDS },
     { "trim", (PyCFunction) ExternalLobVar_Trim,
               METH_VARARGS  | METH_KEYWORDS },
+    { "getchunksize", (PyCFunction) ExternalLobVar_GetChunkSize, METH_NOARGS },
+    { "isopen", (PyCFunction) ExternalLobVar_IsOpen, METH_NOARGS },
     { "getfilename", (PyCFunction) ExternalLobVar_GetFileName, METH_NOARGS },
     { "setfilename", (PyCFunction) ExternalLobVar_SetFileName, METH_VARARGS },
     { "fileexists", (PyCFunction) ExternalLobVar_FileExists, METH_NOARGS },
@@ -170,7 +178,7 @@ static int ExternalLobVar_InternalRead(
     status = OCILobRead(var->lobVar->connection->handle,
             var->lobVar->environment->errorHandle,
             var->lobVar->data[var->pos], length, offset, buffer,
-            bufferSize, NULL, NULL, 0, var->lobVar->type->charsetForm);
+            bufferSize, NULL, NULL, 0, var->lobVar->type->charsetForm); 
     if (Environment_CheckForError(var->lobVar->environment, status,
             "ExternalLobVar_LobRead()") < 0) {
         OCILobFileClose(var->lobVar->connection->handle,
@@ -275,6 +283,52 @@ static PyObject *ExternalLobVar_Size(
     if (length < 0)
         return NULL;
     return PyInt_FromLong(length);
+}
+
+
+//-----------------------------------------------------------------------------
+// ExternalLobVar_Open()
+//   Open the LOB to speed further accesses.
+//-----------------------------------------------------------------------------
+static PyObject *ExternalLobVar_Open(
+    udt_ExternalLobVar *var,            // variable to return the size of
+    PyObject *args)                     // arguments
+{
+    sword status;
+
+    if (ExternalLobVar_Verify(var) < 0)
+        return NULL;
+    status = OCILobOpen(var->lobVar->connection->handle,
+            var->lobVar->environment->errorHandle,
+            var->lobVar->data[var->pos], OCI_LOB_READWRITE);
+    if (Environment_CheckForError(var->lobVar->environment, status,
+            "ExternalLobVar_Open()") < 0)
+        return NULL;
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+
+//-----------------------------------------------------------------------------
+// ExternalLobVar_Close()
+//   Close the LOB.
+//-----------------------------------------------------------------------------
+static PyObject *ExternalLobVar_Close(
+    udt_ExternalLobVar *var,            // variable to return the size of
+    PyObject *args)                     // arguments
+{
+    sword status;
+
+    if (ExternalLobVar_Verify(var) < 0)
+        return NULL;
+    status = OCILobClose(var->lobVar->connection->handle,
+            var->lobVar->environment->errorHandle,
+            var->lobVar->data[var->pos]);
+    if (Environment_CheckForError(var->lobVar->environment, status,
+            "ExternalLobVar_Close()") < 0)
+        return NULL;
+    Py_INCREF(Py_None);
+    return Py_None;
 }
 
 
@@ -408,11 +462,62 @@ static PyObject *ExternalLobVar_Reduce(
 
 
 //-----------------------------------------------------------------------------
+// ExternalLobVar_GetChunkSize()
+//   Return the chunk size that should be used when reading/writing the LOB in
+// chunks.
+//-----------------------------------------------------------------------------
+static PyObject *ExternalLobVar_GetChunkSize(
+    udt_ExternalLobVar *var,            // variable to get chunk size for
+    PyObject *args)                     // arguments
+{
+    ub4 chunkSize;
+    sword status;
+
+    if (ExternalLobVar_Verify(var) < 0)
+        return NULL;
+    status = OCILobGetChunkSize(var->lobVar->connection->handle,
+            var->lobVar->environment->errorHandle, var->lobVar->data[var->pos],
+            &chunkSize);
+    if (Environment_CheckForError(var->lobVar->environment, status,
+            "ExternalLobVar_GetChunkSize()") < 0)
+        return NULL;
+    return PyInt_FromLong(chunkSize);
+}
+
+
+//-----------------------------------------------------------------------------
+// ExternalLobVar_IsOpen()
+//   Return a boolean indicating if the lob is open or not.
+//-----------------------------------------------------------------------------
+static PyObject *ExternalLobVar_IsOpen(
+    udt_ExternalLobVar *var,            // variable to get chunk size for
+    PyObject *args)                     // arguments
+{
+    boolean isOpen;
+    sword status;
+
+    if (ExternalLobVar_Verify(var) < 0)
+        return NULL;
+    status = OCILobIsOpen(var->lobVar->connection->handle,
+            var->lobVar->environment->errorHandle, var->lobVar->data[var->pos],
+            &isOpen);
+    if (Environment_CheckForError(var->lobVar->environment, status,
+            "ExternalLobVar_IsOpen()") < 0)
+        return NULL;
+#if (PY_VERSION_HEX >= 0x02030000)
+    return PyBool_FromLong(isOpen);
+#else
+    return PyInt_FromLong(isOpen);
+#endif
+}
+
+
+//-----------------------------------------------------------------------------
 // ExternalLobVar_GetFileName()
 //   Return the directory alias and file name for the BFILE lob.
 //-----------------------------------------------------------------------------
 static PyObject *ExternalLobVar_GetFileName(
-    udt_ExternalLobVar *var,            // variable to perform write against
+    udt_ExternalLobVar *var,            // variable to get file name for
     PyObject *args)                     // arguments
 {
     char dirAlias[30], name[255];
@@ -458,7 +563,7 @@ static PyObject *ExternalLobVar_GetFileName(
 //   Set the directory alias and file name for the BFILE lob.
 //-----------------------------------------------------------------------------
 static PyObject *ExternalLobVar_SetFileName(
-    udt_ExternalLobVar *var,            // variable to perform write against
+    udt_ExternalLobVar *var,            // variable to set file name for
     PyObject *args)                     // arguments
 {
     int dirAliasLength, nameLength;
