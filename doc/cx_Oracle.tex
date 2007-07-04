@@ -11,7 +11,7 @@
 
 \date{\today}                   % date of release
 \release{4.3.2}                 % software release
-\setreleaseinfo{}		        % empty for final release
+\setreleaseinfo{}               % empty for final release
 \setshortversion{4.3}           % major.minor only for software
 
 \begin{document}
@@ -800,6 +800,15 @@ object is destroyed or closed.
   This read-only attribute specifies the number of rows that have currently
   been fetched from the cursor (for select statements) or that have been
   affected by the operation (for insert, update and delete statements).
+\end{datadesc}
+
+\begin{datadesc}{rowfactory}
+  This read-write attribute specifies a method to call for each row that is
+  retrieved from the database. Ordinarily a tuple is returned for each row but
+  if this attribute is set, the method is called with the argument tuple that
+  would normally be returned and the result of the method is returned instead.
+
+  \strong{NOTE:} The DB API definition does not define this attribute.
 \end{datadesc}
 
 \begin{funcdesc}{setinputsizes}{\var{*args}, \var{**keywordArgs}}
