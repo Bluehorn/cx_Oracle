@@ -221,7 +221,17 @@
 </dd></dl>
 
 <p>
-<dl><dt><b><tt id='l2h-31' xml:id='l2h-31'>NCLOB</tt></b></dt>
+<dl><dt><b><tt id='l2h-31' xml:id='l2h-31'>NATIVE_FLOAT</tt></b></dt>
+<dd>
+  This type object is used to describe columns in a database that are of type
+  binary_double or binary_float and is only available in Oracle 10g.
+
+<p>
+<strong>NOTE:</strong> This attribute is an extension to the DB API definition.
+</dd></dl>
+
+<p>
+<dl><dt><b><tt id='l2h-32' xml:id='l2h-32'>NCLOB</tt></b></dt>
 <dd>
   This type object is used to describe columns in a database that are NCLOBs.
 
@@ -230,13 +240,13 @@
 </dd></dl>
 
 <p>
-<dl><dt><b><tt id='l2h-32' xml:id='l2h-32'>NUMBER</tt></b></dt>
+<dl><dt><b><tt id='l2h-33' xml:id='l2h-33'>NUMBER</tt></b></dt>
 <dd>
   This type object is used to describe columns in a database that are numbers.
 </dd></dl>
 
 <p>
-<dl><dt><b><tt id='l2h-33' xml:id='l2h-33'>OBJECT</tt></b></dt>
+<dl><dt><b><tt id='l2h-34' xml:id='l2h-34'>OBJECT</tt></b></dt>
 <dd>
   This type object is used to describe columns in a database that are objects.
 
@@ -245,20 +255,20 @@
 </dd></dl>
 
 <p>
-<dl><dt><b><tt id='l2h-34' xml:id='l2h-34'>paramstyle</tt></b></dt>
+<dl><dt><b><tt id='l2h-35' xml:id='l2h-35'>paramstyle</tt></b></dt>
 <dd>
   String constant stating the type of parameter marker formatting expected by
   the interface. Currently 'named' as in 'where name = :name'.
 </dd></dl>
 
 <p>
-<dl><dt><b><tt id='l2h-35' xml:id='l2h-35'>ROWID</tt></b></dt>
+<dl><dt><b><tt id='l2h-36' xml:id='l2h-36'>ROWID</tt></b></dt>
 <dd>
   This type object is used to describe the pseudo column "rowid".
 </dd></dl>
 
 <p>
-<dl><dt><b><tt id='l2h-36' xml:id='l2h-36'>SPOOL_ATTRVAL_FORCEGET</tt></b></dt>
+<dl><dt><b><tt id='l2h-37' xml:id='l2h-37'>SPOOL_ATTRVAL_FORCEGET</tt></b></dt>
 <dd>
   This constant is used to define the "get" mode on session pools and indicates
   that a new connection will be returned if there are no free sessions
@@ -269,7 +279,7 @@
 </dd></dl>
 
 <p>
-<dl><dt><b><tt id='l2h-37' xml:id='l2h-37'>SPOOL_ATTRVAL_NOWAIT</tt></b></dt>
+<dl><dt><b><tt id='l2h-38' xml:id='l2h-38'>SPOOL_ATTRVAL_NOWAIT</tt></b></dt>
 <dd>
   This constant is used to define the "get" mode on session pools and indicates
   that an exception is raised if there are no free sessions available in the
@@ -280,7 +290,7 @@
 </dd></dl>
 
 <p>
-<dl><dt><b><tt id='l2h-38' xml:id='l2h-38'>SPOOL_ATTRVAL_WAIT</tt></b></dt>
+<dl><dt><b><tt id='l2h-39' xml:id='l2h-39'>SPOOL_ATTRVAL_WAIT</tt></b></dt>
 <dd>
   This constant is used to define the "get" mode on session pools and indicates
   that the acquisition of a connection waits until a session is freed if there
@@ -291,14 +301,14 @@
 </dd></dl>
 
 <p>
-<dl><dt><b><tt id='l2h-39' xml:id='l2h-39'>STRING</tt></b></dt>
+<dl><dt><b><tt id='l2h-40' xml:id='l2h-40'>STRING</tt></b></dt>
 <dd>
   This type object is used to describe columns in a database that are strings
   (in Oracle this is VARCHAR2 columns).
 </dd></dl>
 
 <p>
-<dl><dt><b><tt id='l2h-40' xml:id='l2h-40'>SYSDBA</tt></b></dt>
+<dl><dt><b><tt id='l2h-41' xml:id='l2h-41'>SYSDBA</tt></b></dt>
 <dd>
   Value to be passed to the connect() method which indicates that SYSDBA
   access is to be acquired. See the Oracle documentation for more details.
@@ -308,7 +318,7 @@
 </dd></dl>
 
 <p>
-<dl><dt><b><tt id='l2h-41' xml:id='l2h-41'>SYSOPER</tt></b></dt>
+<dl><dt><b><tt id='l2h-42' xml:id='l2h-42'>SYSOPER</tt></b></dt>
 <dd>
   Value to be passed to the connect() method which indicates that SYSOPER
   access is to be acquired. See the Oracle documentation for more details.
@@ -318,7 +328,7 @@
 </dd></dl>
 
 <p>
-<dl><dt><b><tt id='l2h-42' xml:id='l2h-42'>threadsafety</tt></b></dt>
+<dl><dt><b><tt id='l2h-43' xml:id='l2h-43'>threadsafety</tt></b></dt>
 <dd>
   Integer constant stating the level of thread safety that the interface
   supports. Currently 2, which means that threads may share the module and
@@ -333,7 +343,7 @@ Note that in order to make use of multiple threads in a program which intends
 </dd></dl>
 
 <p>
-<dl><dt><b><tt id='l2h-43' xml:id='l2h-43'>TIMESTAMP</tt></b></dt>
+<dl><dt><b><tt id='l2h-44' xml:id='l2h-44'>TIMESTAMP</tt></b></dt>
 <dd>
   This type object is used to describe columns in a database that are
   timestamps.
@@ -344,7 +354,7 @@ Note that in order to make use of multiple threads in a program which intends
 </dd></dl>
 
 <p>
-<dl><dt><b><tt id='l2h-44' xml:id='l2h-44'>UCBTYPE_ENTRY</tt></b></dt>
+<dl><dt><b><tt id='l2h-45' xml:id='l2h-45'>UCBTYPE_ENTRY</tt></b></dt>
 <dd>
   This constant is used to register callbacks on entry to the function
   of the OCI. In other words, the callback will be called prior to the
@@ -355,7 +365,7 @@ Note that in order to make use of multiple threads in a program which intends
 </dd></dl>
 
 <p>
-<dl><dt><b><tt id='l2h-45' xml:id='l2h-45'>UCBTYPE_EXIT</tt></b></dt>
+<dl><dt><b><tt id='l2h-46' xml:id='l2h-46'>UCBTYPE_EXIT</tt></b></dt>
 <dd>
   This constant is used to register callbacks on exit from the function
   of the OCI. In other words, the callback will be called after the execution
@@ -366,7 +376,7 @@ Note that in order to make use of multiple threads in a program which intends
 </dd></dl>
 
 <p>
-<dl><dt><b><tt id='l2h-46' xml:id='l2h-46'>UCBTYPE_REPLACE</tt></b></dt>
+<dl><dt><b><tt id='l2h-47' xml:id='l2h-47'>UCBTYPE_REPLACE</tt></b></dt>
 <dd>
   This constant is used to register callbacks that completely replace the
   call to the OCI function.
@@ -376,9 +386,9 @@ Note that in order to make use of multiple threads in a program which intends
 </dd></dl>
 
 <p>
-<dl><dt><b><tt id='l2h-47' xml:id='l2h-47'>version</tt></b></dt>
+<dl><dt><b><tt id='l2h-48' xml:id='l2h-48'>version</tt></b></dt>
 <dd>
-  String constant stating the version of the module. Currently '4.3.1'.
+  String constant stating the version of the module. Currently '4.3.2'.
 
 <p>
 <strong>NOTE:</strong> This attribute is an extension to the DB API definition.
@@ -419,7 +429,7 @@ Note that in order to make use of multiple threads in a program which intends
 </div>
 </div>
 <hr />
-<span class="release-info">Release 4.3.1, documentation updated on April 18, 2007.</span>
+<span class="release-info">Release 4.3.2, documentation updated on August 2, 2007.</span>
 </div>
 <!--End of Navigation Panel-->
 

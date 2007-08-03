@@ -59,7 +59,7 @@
 object is destroyed or closed.
 
 <p>
-<dl><dt><b><tt id='l2h-58' xml:id='l2h-58'>action</tt></b></dt>
+<dl><dt><b><tt id='l2h-59' xml:id='l2h-59'>action</tt></b></dt>
 <dd>
   This write-only attribute sets the action column in the v$session table and
   is only available in Oracle 10g.
@@ -69,8 +69,17 @@ object is destroyed or closed.
 </dd></dl>
 
 <p>
+<dl><dt><b><tt id='l2h-60' xml:id='l2h-60'>autocommit</tt></b></dt>
+<dd>
+  This read-write attribute determines whether autocommit mode is on or off.
+
+<p>
+<strong>NOTE:</strong> This attribute is an extension to the DB API definition.
+</dd></dl>
+
+<p>
 <dl><dt><table cellpadding="0" cellspacing="0"><tr valign="baseline">
-  <td><nobr><b><tt id='l2h-59' xml:id='l2h-59' class="function">begin</tt></b>(</nobr></td>
+  <td><nobr><b><tt id='l2h-61' xml:id='l2h-61' class="function">begin</tt></b>(</nobr></td>
   <td><var></var>)</td></tr></table></dt>
 <dd>
 <dt><table cellpadding="0" cellspacing="0"><tr valign="baseline">
@@ -93,7 +102,7 @@ Note that in order to make use of global (distributed) transactions, the
 
 <p>
 <dl><dt><table cellpadding="0" cellspacing="0"><tr valign="baseline">
-  <td><nobr><b><tt id='l2h-61' xml:id='l2h-61' class="function">cancel</tt></b>(</nobr></td>
+  <td><nobr><b><tt id='l2h-63' xml:id='l2h-63' class="function">cancel</tt></b>(</nobr></td>
   <td><var></var>)</td></tr></table></dt>
 <dd>
   Cancel a long-running transaction. This is only effective on non-Windows
@@ -101,7 +110,7 @@ Note that in order to make use of global (distributed) transactions, the
 </dl>
 
 <p>
-<dl><dt><b><tt id='l2h-62' xml:id='l2h-62'>clientinfo</tt></b></dt>
+<dl><dt><b><tt id='l2h-64' xml:id='l2h-64'>clientinfo</tt></b></dt>
 <dd>
   This write-only attribute sets the client_info column in the v$session table
   and is only available in Oracle 10g.
@@ -112,7 +121,7 @@ Note that in order to make use of global (distributed) transactions, the
 
 <p>
 <dl><dt><table cellpadding="0" cellspacing="0"><tr valign="baseline">
-  <td><nobr><b><tt id='l2h-63' xml:id='l2h-63' class="function">close</tt></b>(</nobr></td>
+  <td><nobr><b><tt id='l2h-65' xml:id='l2h-65' class="function">close</tt></b>(</nobr></td>
   <td><var></var>)</td></tr></table></dt>
 <dd>
   Close the connection now, rather than whenever __del__ is called. The
@@ -123,7 +132,7 @@ Note that in order to make use of global (distributed) transactions, the
 
 <p>
 <dl><dt><table cellpadding="0" cellspacing="0"><tr valign="baseline">
-  <td><nobr><b><tt id='l2h-64' xml:id='l2h-64' class="function">commit</tt></b>(</nobr></td>
+  <td><nobr><b><tt id='l2h-66' xml:id='l2h-66' class="function">commit</tt></b>(</nobr></td>
   <td><var></var>)</td></tr></table></dt>
 <dd>
   Commit any pending transactions to the database.
@@ -131,14 +140,14 @@ Note that in order to make use of global (distributed) transactions, the
 
 <p>
 <dl><dt><table cellpadding="0" cellspacing="0"><tr valign="baseline">
-  <td><nobr><b><tt id='l2h-65' xml:id='l2h-65' class="function">cursor</tt></b>(</nobr></td>
+  <td><nobr><b><tt id='l2h-67' xml:id='l2h-67' class="function">cursor</tt></b>(</nobr></td>
   <td><var></var>)</td></tr></table></dt>
 <dd>
   Return a new Cursor object (<a href="cursorobj.html#cursorobj">3</a>) using the connection.
 </dl>
 
 <p>
-<dl><dt><b><tt id='l2h-66' xml:id='l2h-66'>dsn</tt></b></dt>
+<dl><dt><b><tt id='l2h-68' xml:id='l2h-68'>dsn</tt></b></dt>
 <dd>
   This read-only attribute returns the TNS entry of the database to which a
   connection has been established.
@@ -148,7 +157,7 @@ Note that in order to make use of global (distributed) transactions, the
 </dd></dl>
 
 <p>
-<dl><dt><b><tt id='l2h-67' xml:id='l2h-67'>encoding</tt></b></dt>
+<dl><dt><b><tt id='l2h-69' xml:id='l2h-69'>encoding</tt></b></dt>
 <dd>
   This read-only attribute returns the IANA character set name of the character
   set in use by the Oracle client.
@@ -158,7 +167,7 @@ Note that in order to make use of global (distributed) transactions, the
 </dd></dl>
 
 <p>
-<dl><dt><b><tt id='l2h-68' xml:id='l2h-68'>maxBytesPerCharacter</tt></b></dt>
+<dl><dt><b><tt id='l2h-70' xml:id='l2h-70'>maxBytesPerCharacter</tt></b></dt>
 <dd>
   This read-only attribute returns the maximum number of bytes each character
   can use for the client character set.
@@ -168,7 +177,7 @@ Note that in order to make use of global (distributed) transactions, the
 </dd></dl>
 
 <p>
-<dl><dt><b><tt id='l2h-69' xml:id='l2h-69'>module</tt></b></dt>
+<dl><dt><b><tt id='l2h-71' xml:id='l2h-71'>module</tt></b></dt>
 <dd>
   This write-only attribute sets the module column in the v$session table and
   is only available in Oracle 10g.
@@ -178,7 +187,7 @@ Note that in order to make use of global (distributed) transactions, the
 </dd></dl>
 
 <p>
-<dl><dt><b><tt id='l2h-70' xml:id='l2h-70'>nencoding</tt></b></dt>
+<dl><dt><b><tt id='l2h-72' xml:id='l2h-72'>nencoding</tt></b></dt>
 <dd>
   This read-only attribute returns the IANA character set name of the national
   character set in use by the Oracle client.
@@ -188,7 +197,7 @@ Note that in order to make use of global (distributed) transactions, the
 </dd></dl>
 
 <p>
-<dl><dt><b><tt id='l2h-71' xml:id='l2h-71'>password</tt></b></dt>
+<dl><dt><b><tt id='l2h-73' xml:id='l2h-73'>password</tt></b></dt>
 <dd>
   This read-only attribute returns the password of the user which established
   the connection to the database.
@@ -199,7 +208,7 @@ Note that in order to make use of global (distributed) transactions, the
 
 <p>
 <dl><dt><table cellpadding="0" cellspacing="0"><tr valign="baseline">
-  <td><nobr><b><tt id='l2h-72' xml:id='l2h-72' class="function">prepare</tt></b>(</nobr></td>
+  <td><nobr><b><tt id='l2h-74' xml:id='l2h-74' class="function">prepare</tt></b>(</nobr></td>
   <td><var></var>)</td></tr></table></dt>
 <dd>
   Prepare the distributed (global) transaction for commit.
@@ -210,7 +219,7 @@ Note that in order to make use of global (distributed) transactions, the
 
 <p>
 <dl><dt><table cellpadding="0" cellspacing="0"><tr valign="baseline">
-  <td><nobr><b><tt id='l2h-73' xml:id='l2h-73' class="function">register</tt></b>(</nobr></td>
+  <td><nobr><b><tt id='l2h-75' xml:id='l2h-75' class="function">register</tt></b>(</nobr></td>
   <td><var><var>code</var>, <var>when</var>, <var>function</var></var>)</td></tr></table></dt>
 <dd>
   Register the function as an OCI callback. The code is one of the function
@@ -230,14 +239,25 @@ Note that in order to make use of global (distributed) transactions, the
 
 <p>
 <dl><dt><table cellpadding="0" cellspacing="0"><tr valign="baseline">
-  <td><nobr><b><tt id='l2h-74' xml:id='l2h-74' class="function">rollback</tt></b>(</nobr></td>
+  <td><nobr><b><tt id='l2h-76' xml:id='l2h-76' class="function">rollback</tt></b>(</nobr></td>
   <td><var></var>)</td></tr></table></dt>
 <dd>
   Rollback any pending transactions.
 </dl>
 
 <p>
-<dl><dt><b><tt id='l2h-75' xml:id='l2h-75'>tnsentry</tt></b></dt>
+<dl><dt><b><tt id='l2h-77' xml:id='l2h-77'>stmtcachesize</tt></b></dt>
+<dd>
+  This read-write attribute specifies the size of the statement cache. This
+  value can make a significant difference in performance (up to 100x) if you
+  have a small number of statements that you execute repeatedly.
+
+<p>
+<strong>NOTE:</strong> This attribute is an extension to the DB API definition.
+</dd></dl>
+
+<p>
+<dl><dt><b><tt id='l2h-78' xml:id='l2h-78'>tnsentry</tt></b></dt>
 <dd>
   This read-only attribute returns the TNS entry of the database to which a
   connection has been established.
@@ -248,7 +268,7 @@ Note that in order to make use of global (distributed) transactions, the
 
 <p>
 <dl><dt><table cellpadding="0" cellspacing="0"><tr valign="baseline">
-  <td><nobr><b><tt id='l2h-76' xml:id='l2h-76' class="function">unregister</tt></b>(</nobr></td>
+  <td><nobr><b><tt id='l2h-79' xml:id='l2h-79' class="function">unregister</tt></b>(</nobr></td>
   <td><var><var>code</var>, <var>when</var></var>)</td></tr></table></dt>
 <dd>
   Unregister the function as an OCI callback. The code is one of the function
@@ -261,7 +281,7 @@ Note that in order to make use of global (distributed) transactions, the
 </dl>
 
 <p>
-<dl><dt><b><tt id='l2h-77' xml:id='l2h-77'>username</tt></b></dt>
+<dl><dt><b><tt id='l2h-80' xml:id='l2h-80'>username</tt></b></dt>
 <dd>
   This read-only attribute returns the name of the user which established the
   connection to the database.
@@ -271,7 +291,7 @@ Note that in order to make use of global (distributed) transactions, the
 </dd></dl>
 
 <p>
-<dl><dt><b><tt id='l2h-78' xml:id='l2h-78'>version</tt></b></dt>
+<dl><dt><b><tt id='l2h-81' xml:id='l2h-81'>version</tt></b></dt>
 <dd>
   This read-only attribute returns the version of the database to which a
   connection has been established.
@@ -315,7 +335,7 @@ Note that in order to make use of global (distributed) transactions, the
 </div>
 </div>
 <hr />
-<span class="release-info">Release 4.3.1, documentation updated on April 18, 2007.</span>
+<span class="release-info">Release 4.3.2, documentation updated on August 2, 2007.</span>
 </div>
 <!--End of Navigation Panel-->
 
