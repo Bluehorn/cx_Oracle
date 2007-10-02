@@ -52,6 +52,8 @@ static PyObject *Connection_RegisterCallback(udt_Connection*, PyObject*);
 static PyObject *Connection_UnregisterCallback(udt_Connection*, PyObject*);
 static PyObject *Connection_GetVersion(udt_Connection*, void*);
 static PyObject *Connection_GetMaxBytesPerCharacter(udt_Connection*, void*);
+static PyObject *Connection_ContextManagerEnter(udt_Connection*, PyObject*);
+static PyObject *Connection_ContextManagerExit(udt_Connection*, PyObject*);
 #ifdef OCI_NLS_CHARSET_MAXBYTESZ
 static PyObject *Connection_GetEncoding(udt_Connection*, void*);
 static PyObject *Connection_GetNationalEncoding(udt_Connection*, void*);
@@ -65,6 +67,8 @@ static int Connection_SetOCIAttr(udt_Connection*, PyObject*, ub4*);
 #endif
 #ifdef ORACLE_10GR2
 static PyObject *Connection_Ping(udt_Connection*, PyObject*);
+static PyObject *Connection_Shutdown(udt_Connection*, PyObject*, PyObject*);
+static PyObject *Connection_Startup(udt_Connection*, PyObject*, PyObject*);
 #endif
 
 
@@ -81,8 +85,14 @@ static PyMethodDef g_ConnectionMethods[] = {
     { "cancel", (PyCFunction) Connection_Cancel, METH_NOARGS },
     { "register", (PyCFunction) Connection_RegisterCallback, METH_VARARGS },
     { "unregister", (PyCFunction) Connection_UnregisterCallback, METH_VARARGS },
+    { "__enter__", (PyCFunction) Connection_ContextManagerEnter, METH_NOARGS },
+    { "__exit__", (PyCFunction) Connection_ContextManagerExit, METH_VARARGS },
 #ifdef ORACLE_10GR2
     { "ping", (PyCFunction) Connection_Ping, METH_NOARGS },
+    { "shutdown", (PyCFunction) Connection_Shutdown,
+            METH_VARARGS | METH_KEYWORDS},
+    { "startup", (PyCFunction) Connection_Startup,
+            METH_VARARGS | METH_KEYWORDS},
 #endif
     { NULL }
 };
@@ -1191,6 +1201,47 @@ static PyObject *Connection_UnregisterCallback(
 }
 
 
+//-----------------------------------------------------------------------------
+// Connection_ContextManagerEnter()
+//   Called when the connection is used as a context manager and simply returns
+// itself as a convenience to the caller.
+//-----------------------------------------------------------------------------
+static PyObject *Connection_ContextManagerEnter(
+    udt_Connection *self,               // connection
+    PyObject* args)                     // arguments
+{
+    Py_INCREF(self);
+    return (PyObject*) self;
+}
+
+
+//-----------------------------------------------------------------------------
+// Connection_ContextManagerExit()
+//   Called when the connection is used as a context manager and if any
+// exception a rollback takes place; otherwise, a commit takes place.
+//-----------------------------------------------------------------------------
+static PyObject *Connection_ContextManagerExit(
+    udt_Connection *self,               // connection
+    PyObject* args)                     // arguments
+{
+    PyObject *excType, *excValue, *excTraceback, *result;
+    char *methodName;
+
+    if (!PyArg_ParseTuple(args, "OOO", &excType, &excValue, &excTraceback))
+        return NULL;
+    if (excType == Py_None && excValue == Py_None && excTraceback == Py_None)
+        methodName = "commit";
+    else methodName = "rollback";
+    result = PyObject_CallMethod((PyObject*) self, methodName, "");
+    if (!result)
+        return NULL;
+    Py_DECREF(result);
+
+    Py_INCREF(Py_False);
+    return Py_False;
+}
+
+
 #ifdef ORACLE_10GR2
 //-----------------------------------------------------------------------------
 // Connection_Ping()
@@ -1208,8 +1259,94 @@ static PyObject *Connection_Ping(
     status = OCIPing(self->handle, self->environment->errorHandle,
             OCI_DEFAULT);
     if (Environment_CheckForError(self->environment, status,
-            "Connection_UnregisterCallback(): clear") < 0)
+            "Connection_Ping()") < 0)
         return NULL;
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+
+//-----------------------------------------------------------------------------
+// Connection_Shutdown()
+//   Shuts down the database. Note that this must be done in two phases except
+// in the situation where the instance is aborted.
+//-----------------------------------------------------------------------------
+static PyObject *Connection_Shutdown(
+    udt_Connection *self,               // connection
+    PyObject* args,                     // arguments
+    PyObject* keywordArgs)              // keyword arguments
+{
+    static char *keywordList[] = { "mode", NULL };
+    sword status;
+    ub4 mode;
+
+    // parse arguments
+    mode = OCI_DEFAULT;
+    if (!PyArg_ParseTupleAndKeywords(args, keywordArgs, "|i", keywordList,
+            &mode))
+        return NULL;
+
+    // perform the work
+    if (Connection_IsConnected(self) < 0)
+        return NULL;
+    status = OCIDBShutdown(self->handle, self->environment->errorHandle, NULL,
+            mode);
+    if (Environment_CheckForError(self->environment, status,
+            "Connection_Shutdown()") < 0)
+        return NULL;
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+
+//-----------------------------------------------------------------------------
+// Connection_Startup()
+//   Starts up the database, equivalent to "startup nomount" in SQL*Plus.
+//-----------------------------------------------------------------------------
+static PyObject *Connection_Startup(
+    udt_Connection *self,               // connection
+    PyObject* args,                     // arguments
+    PyObject* keywordArgs)              // keyword arguments
+{
+    static char *keywordList[] = { "force", "restrict", NULL };
+    PyObject *forceObj, *restrictObj;
+    int flagTemp;
+    sword status;
+    ub4 flags;
+
+    // parse arguments
+    forceObj = restrictObj = NULL;
+    if (!PyArg_ParseTupleAndKeywords(args, keywordArgs, "|OO", keywordList,
+            &forceObj, &restrictObj))
+        return NULL;
+
+    // set the flags to use during startup
+    flags = 0;
+    if (forceObj) {
+        flagTemp = PyObject_IsTrue(forceObj);
+        if (flagTemp < 0)
+            return NULL;
+        if (flagTemp)
+            flags |= OCI_DBSTARTUPFLAG_FORCE;
+    }
+    if (restrictObj) {
+        flagTemp = PyObject_IsTrue(restrictObj);
+        if (flagTemp < 0)
+            return NULL;
+        if (flagTemp)
+            flags |= OCI_DBSTARTUPFLAG_RESTRICT;
+    }
+
+    // perform the work
+    if (Connection_IsConnected(self) < 0)
+        return NULL;
+    status = OCIDBStartup(self->handle, self->environment->errorHandle, NULL,
+            OCI_DEFAULT, flags);
+    if (Environment_CheckForError(self->environment, status,
+            "Connection_Startup()") < 0)
+        return NULL;
+
     Py_INCREF(Py_None);
     return Py_None;
 }
