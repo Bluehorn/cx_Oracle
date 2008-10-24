@@ -10,22 +10,24 @@ print "Running tests for cx_Oracle version", cx_Oracle.version
 
 import TestEnv
 
-moduleNames = [
-        "Connection",
-        "Cursor",
-        "CursorVar",
-        "DateTimeVar",
-        "LobVar",
-        "LongVar",
-        "NumberVar",
-        "ObjectVar",
-        "StringVar"
-]
-
-if hasattr(cx_Oracle, "TIMESTAMP"):
-    moduleNames.append("TimestampVar")
-if hasattr(cx_Oracle, "SessionPool"):
-    moduleNames.append("SessionPool")
+if len(sys.argv) > 1:
+    moduleNames = [os.path.splitext(v)[0] for v in sys.argv[1:]]
+else:
+    moduleNames = [
+            "Connection",
+            "Cursor",
+            "CursorVar",
+            "DateTimeVar",
+            "LobVar",
+            "LongVar",
+            "NumberVar",
+            "ObjectVar",
+            "StringVar"
+    ]
+    if hasattr(cx_Oracle, "TIMESTAMP"):
+        moduleNames.append("TimestampVar")
+    if hasattr(cx_Oracle, "SessionPool"):
+        moduleNames.append("SessionPool")
 
 class BaseTestCase(unittest.TestCase):
 
