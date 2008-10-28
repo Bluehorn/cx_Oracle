@@ -24,9 +24,10 @@ Changes from 4.4 to 4.4.1
     executions of a statement will retain their original values as requested by
     Harald Armin Massa.
 11) Added comments indicating that an Oracle client is required since so many
-    people find this surprising
+    people find this surprising.
 12) Removed all references to Oracle 8i from the documentation and version 5.x
-    will eliminate all vestiges of support.
+    will eliminate all vestiges of support for this version of the Oracle
+    client.
 
 Changes from 4.3.3 to 4.4
  1) Fix setup.py to handle the Oracle instant client and Oracle XE on both
