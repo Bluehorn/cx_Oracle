@@ -20,9 +20,12 @@ Changes from 4.4 to 4.4.1
     also graciously provided an initial patch.
  9) Modified documentation indicating that the password attribute on connection
     objects can be written.
-10) Added comments indicating that an Oracle client is required since so many
+10) Added documentation warning that parameters not passed in during subsequent
+    executions of a statement will retain their original values as requested by
+    Harald Armin Massa.
+11) Added comments indicating that an Oracle client is required since so many
     people find this surprising
-11) Removed all references to Oracle 8i from the documentation and version 5.x
+12) Removed all references to Oracle 8i from the documentation and version 5.x
     will eliminate all vestiges of support.
 
 Changes from 4.3.3 to 4.4
