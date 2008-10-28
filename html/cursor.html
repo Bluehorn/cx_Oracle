@@ -92,6 +92,19 @@ statement must have been prepared first.</p>
 </div>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="Cursor.bindvars">
+<!--#Cursor.bindvars#--><tt class="descclassname">Cursor.</tt><tt class="descname">bindvars</tt><a class="headerlink" href="#Cursor.bindvars" title="Permalink to this definition">¶</a></dt>
+<dd><p>This read-only attribute specifies the bind variables used for the last
+execute. The value will be either a list or a dictionary depending on
+whether binding was done by position or name. Care should be taken when
+referencing this attribute. In particular, elements should not be removed.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The DB API definition does not define this attribute.</p>
+</div>
+</dd></dl>
+
 <dl class="method">
 <dt id="Cursor.callfunc">
 <!--#Cursor.callfunc#--><tt class="descclassname">Cursor.</tt><tt class="descname">callfunc</tt><big>(</big><em>name</em>, <em>returnType</em><span class="optional">[</span>, <em>parameters=</em><span class="optional">[</span><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#Cursor.callfunc" title="Permalink to this definition">¶</a></dt>
@@ -236,6 +249,18 @@ result set or no call was issued yet.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">The DB API definition does not define this method.</p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Cursor.fetchvars">
+<!--#Cursor.fetchvars#--><tt class="descclassname">Cursor.</tt><tt class="descname">fetchvars</tt><a class="headerlink" href="#Cursor.fetchvars" title="Permalink to this definition">¶</a></dt>
+<dd><p>This read-only attribute specifies the list of variables created for the
+last query that was executed on the cursor.  Care should be taken when
+referencing this attribute. In particular, elements should not be removed.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The DB API definition does not define this attribute.</p>
 </div>
 </dd></dl>
 
