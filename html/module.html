@@ -2,13 +2,13 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Module Interface &mdash; cx_Oracle v4.4 documentation</title>
+    <title>Module Interface &mdash; cx_Oracle v4.4.1 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:   '',
-        VERSION:    '4.4'
+        VERSION:    '4.4.1'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
@@ -17,7 +17,7 @@
     <link rel="contents" title="Global table of contents" href="contents.html" />
     <link rel="index" title="Global index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="top" title="cx_Oracle v4.4 documentation" href="index.html" />
+    <link rel="top" title="cx_Oracle v4.4.1 documentation" href="index.html" />
     <link rel="next" title="Connection Object" href="connection.html" />
     <link rel="prev" title="cx_Oracle" href="index.html" />
   </head>
@@ -29,7 +29,7 @@
         <li class="right"><a href="modindex.html" title="Global Module Index" accesskey="M">modules</a> |</li>
           <li class="right"><a href="connection.html" title="Connection Object" accesskey="N">next</a> |</li>
           <li class="right"><a href="index.html" title="cx_Oracle" accesskey="P">previous</a> |</li>
-        <li><a href="index.html">cx_Oracle v4.4 documentation</a> &raquo;</li>
+        <li><a href="index.html">cx_Oracle v4.4.1 documentation</a> &raquo;</li>
       </ul>
     </div>
     <div class="document">
@@ -596,7 +596,7 @@ to the OCI function.</p>
 <dl class="data">
 <dt id="cx_Oracle.version">
 <!--#cx_Oracle.version#--><tt class="descclassname">cx_Oracle.</tt><tt class="descname">version</tt><a class="headerlink" href="#cx_Oracle.version" title="Permalink to this definition">¶</a></dt>
-<dd><p>String constant stating the version of the module. Currently &#8216;4.4&#8216;.</p>
+<dd><p>String constant stating the version of the module. Currently &#8216;4.4.1&#8216;.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">This attribute is an extension to the DB API definition.</p>
@@ -668,6 +668,51 @@ subclass of DatabaseError.</dd></dl>
 supported by the database. It is a subclass of DatabaseError.</dd></dl>
 
 </div>
+<div class="section">
+<h2 id="exception-handling">Exception handling<a class="headerlink" href="#exception-handling" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>PEP 249 (Python Database API Specification v2.0) says the following about
+exception values:</p>
+<blockquote>
+[...] The values of these exceptions are not defined. They should
+give the user a fairly good idea of what went wrong, though. [...]</blockquote>
+<p class="last">With cx_Oracle every exception object has exactly one argument in the
+<tt class="docutils literal"><span class="pre">args</span></tt> tuple. This argument is a <tt class="docutils literal"><span class="pre">cx_Oracle._Error</span></tt> object which has
+the following three read-only attributes.</p>
+</div>
+<dl class="attribute">
+<dt id="cx_Oracle._Error.code">
+<!--#cx_Oracle._Error.code#--><tt class="descclassname">_Error.</tt><tt class="descname">code</tt><a class="headerlink" href="#cx_Oracle._Error.code" title="Permalink to this definition">¶</a></dt>
+<dd>Integer attribute representing the Oracle error number (ORA-XXXXX).</dd></dl>
+
+<dl class="attribute">
+<dt id="cx_Oracle._Error.message">
+<!--#cx_Oracle._Error.message#--><tt class="descclassname">_Error.</tt><tt class="descname">message</tt><a class="headerlink" href="#cx_Oracle._Error.message" title="Permalink to this definition">¶</a></dt>
+<dd>String attribute representing the Oracle message of the error. This
+message is localized by the environment of the Oracle connection.</dd></dl>
+
+<dl class="attribute">
+<dt id="cx_Oracle._Error.context">
+<!--#cx_Oracle._Error.context#--><tt class="descclassname">_Error.</tt><tt class="descname">context</tt><a class="headerlink" href="#cx_Oracle._Error.context" title="Permalink to this definition">¶</a></dt>
+<dd>String attribute representing the context in which the exception was
+raised..</dd></dl>
+
+<p>This allows you to use the exceptions for example in the following way:</p>
+<div class="highlight"><pre><span class="k">import</span> <span class="nn">sys</span>
+<span class="k">import</span> <span class="nn">cx_Oracle</span>
+
+<span class="n">connection</span> <span class="o">=</span> <span class="n">cx_Oracle</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="s">&quot;user/pw@tns&quot;</span><span class="p">)</span>
+<span class="n">cursor</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;select 1 / 0 from dual&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">cx_Oracle</span><span class="o">.</span><span class="n">DatabaseError</span><span class="p">,</span> <span class="n">exc</span><span class="p">:</span>
+    <span class="n">error</span><span class="p">,</span> <span class="o">=</span> <span class="n">exc</span><span class="o">.</span><span class="n">args</span>
+    <span class="k">print</span> <span class="o">&gt;&gt;</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;Oracle-Error-Code:&quot;</span><span class="p">,</span> <span class="n">error</span><span class="o">.</span><span class="n">code</span>
+    <span class="k">print</span> <span class="o">&gt;&gt;</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;Oracle-Error-Message:&quot;</span><span class="p">,</span> <span class="n">error</span><span class="o">.</span><span class="n">message</span>
+</pre></div>
+</div>
 </div>
 
 
@@ -681,6 +726,7 @@ supported by the database. It is a subclass of DatabaseError.</dd></dl>
 <li><a class="reference" href="">Module Interface</a><ul>
 <li><a class="reference" href="#id1">Constants</a></li>
 <li><a class="reference" href="#id2">Exceptions</a></li>
+<li><a class="reference" href="#exception-handling">Exception handling</a></li>
 </ul>
 </li>
 </ul>
@@ -706,12 +752,12 @@ supported by the database. It is a subclass of DatabaseError.</dd></dl>
         <li class="right"><a href="modindex.html" title="Global Module Index" accesskey="M">modules</a> |</li>
           <li class="right"><a href="connection.html" title="Connection Object" accesskey="N">next</a> |</li>
           <li class="right"><a href="index.html" title="cx_Oracle" accesskey="P">previous</a> |</li>
-        <li><a href="index.html">cx_Oracle v4.4 documentation</a> &raquo;</li>
+        <li><a href="index.html">cx_Oracle v4.4.1 documentation</a> &raquo;</li>
       </ul>
     </div>
     <div class="footer">
       &copy; Copyright 2008, Anthony Tuininga.
-      Last updated on Jun 06, 2008.
+      Last updated on Oct 28, 2008.
     </div>
   </body>
 </html>
