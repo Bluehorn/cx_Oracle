@@ -28,6 +28,7 @@ Changes from 4.4 to 4.4.1
 12) Removed all references to Oracle 8i from the documentation and version 5.x
     will eliminate all vestiges of support for this version of the Oracle
     client.
+13) Added additional link arguments for Cygwin as requested by Rob Gillen.
 
 Changes from 4.3.3 to 4.4
  1) Fix setup.py to handle the Oracle instant client and Oracle XE on both
