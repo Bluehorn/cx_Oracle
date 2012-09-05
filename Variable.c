@@ -482,26 +482,23 @@ static udt_VariableType *Variable_TypeByValue(
         return &vt_String;
     }
     if (cxString_Check(value)) {
+        /* Always return a vt_LongString, see http://www.sqlalchemy.org/trac/ticket/2561 for why. */
         *size = cxString_GetSize(value);
-        if (*size > MAX_STRING_CHARS)
-            return &vt_LongString;
-        return &vt_String;
+        return &vt_LongString;
     }
 #if PY_MAJOR_VERSION < 3
     if (PyUnicode_Check(value)) {
+        /* Always return a vt_LongString, see http://www.sqlalchemy.org/trac/ticket/2561 for why. */
         *size = PyUnicode_GET_SIZE(value);
-        if (*size > MAX_STRING_CHARS)
-            return &vt_LongString;
-        return &vt_NationalCharString;
+        return &vt_LongString;
     }
     if (PyInt_Check(value))
         return &vt_Integer;
 #else
     if (PyBytes_Check(value)) {
+        /* Always return a vt_LongBinary, see http://www.sqlalchemy.org/trac/ticket/2561 for why. */
         *size = PyBytes_GET_SIZE(value);
-        if (*size > MAX_BINARY_BYTES)
-            return &vt_LongBinary;
-        return &vt_Binary;
+        return &vt_LongBinary;
     }
 #endif
     if (PyLong_Check(value))
@@ -514,9 +511,8 @@ static udt_VariableType *Variable_TypeByValue(
             return NULL;
         *size = temp.size;
         cxBuffer_Clear(&temp);
-        if (*size > MAX_BINARY_BYTES)
-            return &vt_LongBinary;
-        return &vt_Binary;
+        /* Always return a vt_LongBinary, see http://www.sqlalchemy.org/trac/ticket/2561 for why. */
+        return &vt_LongBinary;
     }
     if (PyBool_Check(value))
         return &vt_Boolean;
@@ -827,6 +823,9 @@ static udt_Variable *Variable_NewByType(
         size = PyInt_AsLong(value);
         if (PyErr_Occurred())
             return NULL;
+        /* Perhaps we should use vt_LongString here in all cases as well, but that
+           must be a large number to overflow the MAX_STRING_CHARS limit. Seems
+           like this would be too much overkill here. */
         if (size > MAX_STRING_CHARS)
             varType = &vt_LongString;
         else varType = &vt_String;
